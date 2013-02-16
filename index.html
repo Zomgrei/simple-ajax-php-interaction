@@ -1,0 +1,54 @@
+<html>
+<head>
+<script src='jquery-1.9.1.min.js'></script>
+
+<title>Simple AJAX and PHP Interaction</title>
+</head>
+<body>
+<h1>Simple AJAX and PHP Interaction</h1>
+
+<p>See the source code for comments.</p>
+
+<p><b>Enter any text in the box below and click commit. Leave blank to return a "failure."</b>
+
+<form id="emptyForm" action="doAction.php" method="post">
+	Enter Text: <input type="text" name="sentText" id="sentText" />
+	<br /><input type="submit" name="submit" value="Submit" id="submit" />
+</form></p>
+<p id="returnInfo" style="width: 100%; background-color: skyblue;">Status Text Will Appear Here</p>
+<script type='text/javascript'>
+	$("#submit").click(function(event) {
+		event.preventDefault();
+		// sets our variables - action pulls the form action
+		// type pulls the form method
+		// textToSend pulls the value of the textbox.
+		var action = $("#emptyForm").attr("action");
+		var type = $("#emptyForm").attr("method");
+		var textToSend = $("#sentText").val();
+		// sets up the request:
+		// URL uses action from the form
+		// type uses the method from the form.
+		// data needs to be manually entered or use variables as above unless you want
+		// to come up with a method for looping all inputs and grabbing the name and contents
+		var request = $.ajax({
+			url: action,
+			type: type,
+			data: {sentText : textToSend},
+		});
+		
+		request.done(function(msg) {
+			if (msg=="failed") {
+				$("#returnInfo").html("Failed as we had expected!");
+			} else {
+				$("#returnInfo").html( msg );
+			}
+		});
+		
+		request.fail(function(jqXHR, textStatus) {
+			alert( "Request failed: " + textStatus );
+		});
+	});
+</script>
+
+</body>
+</html>
